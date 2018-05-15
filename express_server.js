@@ -43,7 +43,9 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // debug statement to see POST parameters
+  urlDatabase[generateRandomString()] = req.body.longURL;
+ // console.log(req.body.longURL);
+ // console.log(urlDatabase);
   res.send("Ok");         // Respond with 'Ok' (we will replace this)
 });
 
