@@ -1,0 +1,27 @@
+<% include ./partials/_header.ejs %>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Full</th>
+            <th>Shortened</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(var p in urls) { %>
+          <tr>
+            <td><%= urls[p] %></td>
+            <td><%= p %></td>
+          </tr>
+          <% } %>
+          <tr>
+            <td>
+              <a href="">Shorten URL</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+</body>
+</html>
+
+
