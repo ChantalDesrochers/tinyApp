@@ -11,9 +11,18 @@ app.use(bodyParser.urlencoded({
 }))//added body parser
 app.use(cookieParser())
 
-
-
-
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+}
 
 
 var urlDatabase = {
@@ -67,6 +76,11 @@ app.post("/urls", (req, res) => {
   console.log(req.body.longURL);
   console.log(urlDatabase);
   res.redirect(`/urls/${random}`); // Respond with 'Ok' (we will replace this)
+});
+
+//Registration form
+app.get("/register", (req, res) => {
+  res.render("urls_register")
 });
 
 //READ specifc pages
