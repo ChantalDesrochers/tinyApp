@@ -118,6 +118,11 @@ res.clearCookie("username");
 res.redirect("/urls");
 });
 
+//Registration form
+app.get("/register", (req, res) => {
+  res.render("urls_register")
+});
+
 
 
 app.listen(PORT, () => {
