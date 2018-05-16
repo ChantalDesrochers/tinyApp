@@ -5,9 +5,16 @@
 </head>
 <body>
      <h1>Tiny app!</h1>
+<% if(username) { %>
+<p>The username you submitted is <%= username %> </p>
+<form action="/logout" method="POST">
+  <button type="submit">Log out</button>
+</form>
+<% } else { %>
 <form action="/login" method="POST">
 <label for="username">Enter your username:</label>
       <input id="username" type="text" name="username" placeholder="username">
       <button type="submit">Submit</button>
-<p>The username you submitted is <%=username%></p>
 </form>
+<% } %>
+
