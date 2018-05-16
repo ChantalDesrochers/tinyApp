@@ -12,6 +12,10 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser())
 
 
+
+
+
+
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -42,14 +46,16 @@ app.get("/hello", (req, res) => {
 //READ display all urls
 app.get("/urls", (req, res) => {
   let templateVars = {
-    urls: urlDatabase
+    urls: urlDatabase,
+    username: req.cookies["username"]
   };
   res.render("urls_index", templateVars);
 });
 
-//CREATE form
+//CREATE get Route (disaplying form)
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  var username = req.cookies["username"];
+  res.render("urls_new", username);
 });
 
 //CREATE post Route
@@ -65,7 +71,8 @@ app.post("/urls", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
-    longURL: urlDatabase[req.params.id]
+    longURL: urlDatabase[req.params.id],
+    username: req.cookies["username"]
   };
   res.render("urls_show", templateVars);
 });
