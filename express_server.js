@@ -69,10 +69,21 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(`https://${longURL}`);
 });
 
+//UPDATE route
+app.post("/urls/:id/", (req, res) => {
+ var ourTinyURL = req.params.id;
+ var ourURLtoChange = urlDatabase[ourTinyURL];
+ console.log(ourURLtoChange);
+  urlDatabase[ourTinyURL] = req.body.longURL;
+  // console.log(ourURLtoChange);
+  console.log(urlDatabase[ourTinyURL]);
+  res.redirect("/urls");
+
+});
+
+//DELETE route
 app.post("/urls/:id/delete", (req, res) => {
-  // var url = urlDatabase[req.params.id];
-  // console.log(url);
-  delete urlDatabase[req.params.id];
+  delete urlDatabase[req.params.id]; //deleting the url in the database
   res.redirect("/urls");
 });
 

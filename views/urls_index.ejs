@@ -6,6 +6,7 @@
             <th>Full</th>
             <th>Shortened</th>
             <th>Delete</th>
+            <th>Update</th>
           </tr>
         </thead>
         <tbody>
@@ -15,8 +16,11 @@
             <td><%= p %></td>
             <td>
               <form method="POST" action="/urls/<%= p %>/delete">
-               <input type="submit" value="delete" />
+               <input type="submit" value="delete">
              </form>
+           </td>
+           <td>
+            <a href="urls/<%=p%>">Update</a>
            </td>
           </tr>
           <% } %>

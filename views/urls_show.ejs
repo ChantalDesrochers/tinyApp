@@ -5,6 +5,12 @@
         <li><%=shortURL%></li>
         <li><%=longURL%></li>
       </ul>
+
+      <form action="/urls/<%=shortURL%>" method="POST">
+      <label for="longURL">Enter a new URL:</label>
+      <input id="longURL" type="text" name="longURL" value="<%=longURL%>">
+      <input type="submit" value="New URL">
+    </form>
 </body>
 </html>
 
