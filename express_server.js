@@ -69,6 +69,13 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${random}`); // Respond with 'Ok' (we will replace this)
 });
 
+
+//Registration form
+app.get("/register", (req, res) => {
+  res.render("urls_register")
+});
+
+
 //READ specifc pages
 app.get("/urls/:id", (req, res) => {
   let templateVars = {
@@ -118,10 +125,7 @@ res.clearCookie("username");
 res.redirect("/urls");
 });
 
-//Registration form
-app.get("/register", (req, res) => {
-  res.render("urls_register")
-});
+
 
 
 
