@@ -47,10 +47,6 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
-app.get("/hello", (req, res) => {
-  res.end("<html><body>Hello <b>World</b></body></html>\n");
-});
-
 //READ display all urls
 app.get("/urls", (req, res) => {
   let templateVars = {
@@ -83,6 +79,20 @@ app.get("/register", (req, res) => {
   res.render("urls_register")
 });
 
+
+//POST registration form
+app.post("/register", (req, res) => {
+var newUserEmail = req.body.email;
+var newUserPassword = req.body.password;
+var newUserID = generateRandomString();
+
+users["id"] = newUserID;
+users["email"] = newUserEmail;
+users["password"] = newUserPassword;
+res.cookie("user ID", `${newUserID}`);
+console.log(users);
+res.redirect("/urls");
+});
 
 //READ specifc pages
 app.get("/urls/:id", (req, res) => {
@@ -132,6 +142,7 @@ app.post("/logout", (req, res) => {
 res.clearCookie("username");
 res.redirect("/urls");
 });
+
 
 
 
