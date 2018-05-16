@@ -52,10 +52,12 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-//CREATE get Route (disaplying form)
+//CREATE get Route (displaying form)
 app.get("/urls/new", (req, res) => {
-  var username = req.cookies["username"];
-  res.render("urls_new", username);
+  let templateVars = {
+    username: req.cookies["username"]
+  }
+  res.render("urls_new", templateVars);
 });
 
 //CREATE post Route
@@ -103,14 +105,18 @@ app.post("/urls/:id/delete", (req, res) => {
   res.redirect("/urls");
 });
 
-//AUTHENTICATE (sort of) route
+//LOGIN route
 app.post("/login", (req, res) => {
 var userInput = req.body.username;
 res.cookie("username", `${userInput}`);
-
 res.redirect("/urls");
 });
 
+//LOGOUT route
+app.post("/logout", (req, res) => {
+res.clearCookie("username");
+res.redirect("/urls");
+});
 
 
 
