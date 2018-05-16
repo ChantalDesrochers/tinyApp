@@ -85,13 +85,17 @@ app.post("/register", (req, res) => {
 var newUserEmail = req.body.email;
 var newUserPassword = req.body.password;
 var newUserID = generateRandomString();
-
+if(!newUserEmail || !newUserPassword) {
+  res.status(404);
+  res.send("404 error!");
+} else {
 users["id"] = newUserID;
 users["email"] = newUserEmail;
 users["password"] = newUserPassword;
 res.cookie("user ID", `${newUserID}`);
 console.log(users);
 res.redirect("/urls");
+}
 });
 
 //READ specifc pages
