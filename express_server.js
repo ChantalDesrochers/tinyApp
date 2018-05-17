@@ -75,12 +75,10 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${random}`); // Respond with 'Ok' (we will replace this)
 });
 
-
 //Registration form
 app.get("/register", (req, res) => {
   res.render("urls_register")
 });
-
 
 //POST registration form ///double check error handling (if user exists)
 app.post("/register", (req, res) => {
@@ -106,7 +104,6 @@ for (user in users) {
     res.redirect("/urls");
   }
 });
-
 
 // (users["email"]==newUserEmail) {
 // res.status(400);
@@ -210,11 +207,6 @@ app.post("/logout", (req, res) => {
 res.clearCookie("user_ID");
 res.redirect("/urls");
 });
-
-
-
-
-
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
