@@ -164,7 +164,9 @@ app.post("/urls/:id/", (req, res) => {
 
 //DELETE route
 app.post("/urls/:id/delete", (req, res) => {
-  delete urlDatabase[req.params.id]; //deleting the url in the database
+  if(urlDatabase[req.params.id]["userID"] === req.cookies["user_ID"]) {
+    delete urlDatabase[req.params.id]; //deleting the url in the database
+  }
   res.redirect("/urls");
 });
 
