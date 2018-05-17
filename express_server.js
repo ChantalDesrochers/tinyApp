@@ -24,12 +24,12 @@ const users = {
 }
 
 var urlDatabase = {
-  "http://www.lighthouselabs.ca": {
-    tinyURL: "b2xVn2",
+  "b2xVn2": {
+    orgURL: "http://www.lighthouselabs.ca",
     userID: "userRandomID"
   },
-  "http://www.google.com": {
-    tinyURL: "9sm5xK",
+  "9sm5xK": {
+    orgURL: "http://www.google.com",
     userID: "user2RandomID"
   }
 };
@@ -86,14 +86,13 @@ app.get("/urls/new", (req, res) => {
 app.post("/urls", (req, res) => {
   var random = generateRandomString();
   var longURL = req.body.longURL;
-  urlDatabase[longURL] = {
-    "tinyURL": random,
+  urlDatabase[random] = {
+    "orgURL": longURL,
     "userID": req.cookies["user_ID"]
   }
   console.log(urlDatabase);
   res.redirect(`/urls/${random}`); // Respond with 'Ok' (we will replace this)
 });
-
 
 //Registration form
 app.get("/register", (req, res) => {
@@ -134,19 +133,21 @@ for (user in users) {
 
 //READ specifc pages
 app.get("/urls/:id", (req, res) => {
+  let shortURL = req.params.id
   let templateVars = {
     shortURL: req.params.id,
-    longURL: urlDatabase[req.params.id],
+    longURL: urlDatabase[shortURL]["orgURL"],
     users: users[req.cookies["user_ID"]]
     // username: req.cookies["username"]
   };
+
   res.render("urls_show", templateVars);
 });
 
 //Redirect route
 app.get("/u/:shortURL", (req, res) => {
   console.log(urlDatabase[req.params.shortURL]);
-  let longURL = urlDatabase[req.params.shortURL];
+  let longURL = urlDatabase[req.params.shortURL]["orgURL"];
   console.log(longURL);
   res.redirect(`https://${longURL}`);
 });
@@ -154,9 +155,9 @@ app.get("/u/:shortURL", (req, res) => {
 //UPDATE route
 app.post("/urls/:id/", (req, res) => {
  var ourTinyURL = req.params.id;
- var ourURLtoChange = urlDatabase[ourTinyURL];
-  urlDatabase[ourTinyURL] = req.body.longURL;
-  console.log(urlDatabase[ourTinyURL]);
+ var ourNewURL = req.body.longURL;
+  urlDatabase[ourTinyURL]["orgURL"] = ourNewURL;
+
   res.redirect("/urls");
 
 });

@@ -12,15 +12,15 @@
         <tbody>
           <% for(var p in urls) { %>
           <tr>
-            <td><%=urls[p].tinyURL %></td>
-            <td><%= p %></td>
+            <td> <%=p%>  </td>
+            <td> <%=urls[p].orgURL%> </td>
             <td>
               <form method="POST" action="/urls/<%=p%>/delete">
                <input type="submit" name ="delete" value="delete">
              </form>
            </td>
            <td>
-            <button><a href="urls/<%=p%>">Edit</a></button>
+            <button><a href="/urls/<%=p%>">Edit</a></button>
            </td>
           </tr>
           <% } %>
