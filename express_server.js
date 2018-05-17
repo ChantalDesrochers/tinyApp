@@ -51,7 +51,8 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"]
+    users: users[req.cookies["user_ID"]]
+    // username: req.cookies["username"]
   };
   res.render("urls_index", templateVars);
 });
@@ -59,7 +60,8 @@ app.get("/urls", (req, res) => {
 //CREATE get Route (displaying form)
 app.get("/urls/new", (req, res) => {
   let templateVars = {
-    username: req.cookies["username"]
+    users: users[req.cookies["user_ID"]]
+    // username: req.cookies["username"]
   }
   res.render("urls_new", templateVars);
 });
@@ -80,33 +82,52 @@ app.get("/register", (req, res) => {
 });
 
 
-//POST registration form
+//POST registration form ///double check error handling (if user exists)
 app.post("/register", (req, res) => {
-var newUserEmail = req.body.email;
-var newUserPassword = req.body.password;
-var newUserID = generateRandomString();
-if(!newUserEmail || !newUserPassword) {
-  res.status(400);
-  res.send("400 error!");
-} else if(users["email"]==newUserEmail) {
-res.status(400);
-  res.send("400 error!");
-} else {
-users["id"] = newUserID;
-users["email"] = newUserEmail;
-users["password"] = newUserPassword;
-res.cookie("user ID", `${newUserID}`);
-// console.log(users);
-res.redirect("/urls");
-}
+  var newUserEmail = req.body.email;
+  var newUserPassword = req.body.password;
+  var newUserID = generateRandomString();
+for (user in users) {
+      if (users[user]["email"] == newUserEmail) {
+      res.send("400 error! Email already in use");
+      // res.status(400);
+    }
+  }
+  if (!newUserEmail || !newUserPassword) {
+    res.send("400 error! Must fill out email and password");
+    // res.status(400);
+  }
+  else {
+    users["id"] = newUserID;
+    users["email"] = newUserEmail;
+    users["password"] = newUserPassword;
+    res.cookie("user_ID", `${newUserID}`);
+    console.log(users);
+    res.redirect("/urls");
+  }
 });
+
+
+// (users["email"]==newUserEmail) {
+// res.status(400);
+//   res.send("400 error!");
+// } else {
+// users["id"] = newUserID;
+// users["email"] = newUserEmail;
+// users["password"] = newUserPassword;
+// res.cookie("user_ID", `${newUserID}`);
+// console.log(users);
+// res.redirect("/urls");
+// }
+// });
 
 //READ specifc pages
 app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
     longURL: urlDatabase[req.params.id],
-    username: req.cookies["username"]
+    users: users[req.cookies["user_ID"]]
+    // username: req.cookies["username"]
   };
   res.render("urls_show", templateVars);
 });
@@ -137,16 +158,56 @@ app.post("/urls/:id/delete", (req, res) => {
   res.redirect("/urls");
 });
 
+//LOGIN display page
+app.get("/login", (req, res) => {
+  res.render("urls_login");
+});
+
+
 //LOGIN route
 app.post("/login", (req, res) => {
-var userInput = req.body.username;
-res.cookie("username", `${userInput}`);
-res.redirect("/urls");
+var emailInput = req.body.email;
+var passwordInput = req.body.password;
+// console.log(emailInput);
+// console.log(passwordInput);
+for (userIDs in users) {
+  // console.log(userIDs);
+  // console.log(users[userIDs]);
+  // console.log(users[userIDs]["email"]);
+  // console.log(users[userIDs.email);
+  // console.log(users.userIDs.password);
+    // console.log("bcrypt compare: ",bcrypt.compareSync(password, user.password))
+    if (users[userIDs]["email"] == emailInput && users[userIDs]["password"] == passwordInput) {
+      // res.cookie("user_ID", `${UserID}`);
+     // console.log(userIDs);
+     res.cookie("user_ID", `${userIDs}`);
+     res.redirect("/urls");
+    } else {
+      res.send("Invalid email or password")
+
+    }
+  }
+
+
+  // var userProfile = _.select(users, function(node){
+  //   return node.email === emailInput
+  // });
+  // console.log(req.body.email);
+  // console.log(userProfile);
+//get key by value?
+  // console.log(Object.keys(users)[1]);
+//   if(Object.keys(users)[1] == req.body.email) {
+// console.log(Object.keys(users)[1]);
+//   }
+// var userID= req.body.username;
+
+// res.cookie("user_ID", `${userInput}`);
+
 });
 
 //LOGOUT route
 app.post("/logout", (req, res) => {
-res.clearCookie("username");
+res.clearCookie("user_ID");
 res.redirect("/urls");
 });
 
