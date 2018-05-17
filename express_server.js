@@ -156,8 +156,9 @@ app.get("/u/:shortURL", (req, res) => {
 app.post("/urls/:id/", (req, res) => {
  var ourTinyURL = req.params.id;
  var ourNewURL = req.body.longURL;
+ if(urlDatabase[req.params.id]["userID"] === req.cookies["user_ID"]) {
   urlDatabase[ourTinyURL]["orgURL"] = ourNewURL;
-
+ }
   res.redirect("/urls");
 
 });
