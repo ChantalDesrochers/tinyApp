@@ -43,6 +43,20 @@ function generateRandomString() {
   return randomString;
 } //added function for random string generation
 
+
+function urlsForUser(id){
+  var newObject = {};
+for (var u in urlDatabase) {
+  if(urlDatabase[u]["userID"] == id) {
+ newObject[u] = urlDatabase[u];
+  }
+}
+return newObject;
+}
+
+
+
+
 app.get("/", (req, res) => {
   res.end("Hello!");
 });
@@ -54,11 +68,17 @@ app.get("/urls.json", (req, res) => {
 //READ display all urls
 app.get("/urls", (req, res) => {
   let templateVars = {
-    urls: urlDatabase,
+    urls: urlsForUser(req.cookies["user_ID"]),
     users: users[req.cookies["user_ID"]]
     // username: req.cookies["username"]
   };
-  res.render("urls_index", templateVars);
+  if(!req.cookies["user_ID"]){
+    return res.send("Please login to see the urls");
+  } else {
+   // let templateVars = urlsForUser(req.cookies["user_ID"]);
+    res.render("urls_index", templateVars);
+  }
+
 });
 
 //CREATE get Route (displaying form)
@@ -72,14 +92,14 @@ app.get("/urls/new", (req, res) => {
   if (!users[req.cookies["user_ID"]]) {
     res.redirect("/login");
   } else {
+    res.render("urls_new", templateVars);
+  }
     // urlDatabase[newURL] = {"userID": req.cookies["user_ID"]};
     // console.log(urlDatabase);
-    res.render("urls_new", templateVars);
+
   // console.log(users[req.cookies["user_ID"]]);
   //   res.redirect("/login");
   // } else {
-}
-
 });
 
 //CREATE post Route
@@ -138,8 +158,12 @@ app.get("/urls/:id", (req, res) => {
     shortURL: req.params.id,
     longURL: urlDatabase[shortURL]["orgURL"],
     users: users[req.cookies["user_ID"]]
-    // username: req.cookies["username"]
   };
+ if (!users[req.cookies["user_ID"]]) {
+  res.send("you must log in to see this page");
+ } else if (urlDatabase[shortURL]["userID"] !== req.cookies["user_ID"]) {
+  res.send("you can only see your own urls");
+ }
 
   res.render("urls_show", templateVars);
 });
