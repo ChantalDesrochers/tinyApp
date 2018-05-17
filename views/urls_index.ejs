@@ -3,8 +3,8 @@
       <table class="table">
         <thead>
           <tr>
-            <th>Full</th>
             <th>Shortened</th>
+            <th>Full</th>
             <th>Delete</th>
             <th>Update</th>
           </tr>
@@ -12,7 +12,7 @@
         <tbody>
           <% for(var p in urls) { %>
           <tr>
-            <td><%= urls[p] %></td>
+            <td><%=urls[p].tinyURL %></td>
             <td><%= p %></td>
             <td>
               <form method="POST" action="/urls/<%=p%>/delete">
