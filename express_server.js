@@ -10,8 +10,8 @@ const bcrypt = require('./bcrypt');
 app.set("view engine", "ejs"); //set view engine to ejs
 app.use(bodyParser.urlencoded({
   extended: false
-}))//added body parser
-// app.use(cookieParser())
+}))
+
 app.use(cookieSession({
   name: 'session',
   secret: 'deliver the package json'
@@ -66,7 +66,7 @@ return newObject;
 
 
 app.get("/", (req, res) => {
-  res.end("Hello!");
+  res.redirect("/urls");
 });
 
 app.get("/urls.json", (req, res) => {
@@ -81,7 +81,7 @@ app.get("/urls", (req, res) => {
     // username: req.cookies["username"]
   };
   if(!req.session.user_ID){
-    return res.send("Please login to see the urls");
+    return res.send('<p>Please <a href="/login">login</a> to see the urls. Or <a href="/register">register</a> for an account.<p>');
   } else {
    // let templateVars = urlsForUser(req.cookies["user_ID"]);
     res.render("urls_index", templateVars);
@@ -102,12 +102,6 @@ app.get("/urls/new", (req, res) => {
   } else {
     res.render("urls_new", templateVars);
   }
-    // urlDatabase[newURL] = {"userID": req.cookies["user_ID"]};
-    // console.log(urlDatabase);
-
-  // console.log(users[req.cookies["user_ID"]]);
-  //   res.redirect("/login");
-  // } else {
 });
 
 //CREATE post Route
@@ -130,20 +124,22 @@ app.get("/register", (req, res) => {
 //POST registration form ///double check error handling (if user exists)
 app.post("/register", (req, res) => {
   var newUserEmail = req.body.email;
-  // var newUserPassword = req.body.password;
-  var newUserPassword = bcrypt.hashSync(req.body.password, 10);
+  var newUserPassword = "";
+  if(req.body.password) {
+    newUserPassword = bcrypt.hashSync(req.body.password, 10);
+  } else {
+    newUserPassword = "";
+  }
   var newUserID = generateRandomString();
 for (user in users) {
       if (users[user]["email"] == newUserEmail) {
       res.statusCode = 400;
-      res.send("400 error! Email already in use");
-
+      res.send('<p>400 error! Email already in use. <a href="/register">Try again</a></p>');
     }
   }
   if (!newUserEmail || !newUserPassword) {
     res.statusCode = 400;
-    res.send("400 error! Must fill out email and password");
-
+    res.send('<p>400 error! Must fill out email and password. <a href="/register">Register</a></p>');
   }
   else {
     users[newUserID] = {
@@ -151,33 +147,54 @@ for (user in users) {
     "email": newUserEmail,
     "password":  newUserPassword
   };
-    // res.cookie("user_ID", newUserID);
     req.session.user_ID = newUserID;
     console.log(users);
     res.redirect("/urls");
     }
-
   });
 
 
 
 //READ specifc pages
 app.get("/urls/:id", (req, res) => {
+  if(!urlDatabase[req.params.id]){
+  res.send('This url does not exist');
+  return;
+}
   let shortURL = req.params.id
   let templateVars = {
     shortURL: req.params.id,
     longURL: urlDatabase[shortURL]["orgURL"],
-    // users: users[req.cookies["user_ID"]]
     users: users[req.session.user_ID]
-  };
- if (!users[req.session.user_ID]) {
-  res.send("you must log in to see this page");
+  }
+if (!users[req.session.user_ID]) {
+  res.send('<p>You must <a href="/login">log in</a> to see this page</p>');
+ return;
  } else if (urlDatabase[shortURL]["userID"] !== req.session.user_ID) {
   res.send("you can only see your own urls");
- }
+  return;
+ } else {
+res.render("urls_show", templateVars);
+}
 
-  res.render("urls_show", templateVars);
+//   let shortURL = req.params.id
+//   let templateVars = {
+//     shortURL: req.params.id,
+//     longURL: urlDatabase[shortURL]["orgURL"],
+//     users: users[req.session.user_ID]
+//   };
+//  if (!users[req.session.user_ID]) {
+//   res.send('<p>You must <a href="/login">log in</a> to see this page</p>');
+//  } else if (urlDatabase[shortURL]["userID"] !== req.session.user_ID) {
+//   res.send("you can only see your own urls");
+//  } else if(!urlDatabase[shortURL]) {
+//  res.send('This url does not exist');
+// } else {
+//   res.render("urls_show", templateVars);
 });
+
+
+
 
 //Redirect route
 app.get("/u/:shortURL", (req, res) => {
@@ -226,7 +243,7 @@ for (userIDs in users) {
 
 }
 
-return res.send("Invalid email or password")
+return res.send('<p>Invalid email or password. <a href="/login">Try again</a></p>')
 
 });
 

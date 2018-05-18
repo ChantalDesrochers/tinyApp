@@ -7,6 +7,7 @@
      <h1>Tiny app!</h1>
 <header>
 <% if(users) { %>
+<p>You're logged in as <%=users["email"]%></p>
 <form action="/logout" method="POST">
  <button type="submit">Log out</button>
 </form>
