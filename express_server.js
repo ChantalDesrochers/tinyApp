@@ -3,6 +3,8 @@ var app = express();
 var PORT = process.env.PORT || 8080; // default port 8080
 const bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser')
+const bcrypt = require('./bcrypt');
+
 
 app.set("view engine", "ejs"); //set view engine to ejs
 app.use(bodyParser.urlencoded({
@@ -17,7 +19,7 @@ const users = {
     password: "purple-monkey-dinosaur"
   },
  "user2RandomID": {
-    id: "user2RandomID",
+    id: "user2RandolmID",
     email: "user2@example.com",
     password: "dishwasher-funk"
   }
@@ -122,7 +124,8 @@ app.get("/register", (req, res) => {
 //POST registration form ///double check error handling (if user exists)
 app.post("/register", (req, res) => {
   var newUserEmail = req.body.email;
-  var newUserPassword = req.body.password;
+  // var newUserPassword = req.body.password;
+  var newUserPassword = bcrypt.hashSync(req.body.password, 10);
   var newUserID = generateRandomString();
 for (user in users) {
       if (users[user]["email"] == newUserEmail) {
@@ -203,11 +206,11 @@ app.get("/login", (req, res) => {
 //LOGIN route
 app.post("/login", (req, res) => {
 var emailInput = req.body.email;
-var passwordInput = req.body.password;
 
+// var passwordInput = bcrypt.compareSync(req.body.password, newUserPassword);
 for (userIDs in users) {
 
-    if (users[userIDs]["email"] == emailInput && users[userIDs]["password"] == passwordInput) {
+    if (users[userIDs]["email"] == emailInput && bcrypt.compareSync(req.body.password, users[userIDs]["password"])) {
 
      res.cookie("user_ID", `${userIDs}`);
      return res.redirect("/urls");
@@ -232,3 +235,9 @@ app.post("/logout", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
+
+
+
+
+
