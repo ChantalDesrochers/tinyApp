@@ -64,9 +64,13 @@ return newObject;
 
 
 
-
 app.get("/", (req, res) => {
-  res.redirect("/urls");
+  if(users[req.session.user_ID]){
+    res.redirect("/urls");
+  } else {
+    res.redirect("/login");
+  }
+
 });
 
 app.get("/urls.json", (req, res) => {
@@ -78,7 +82,6 @@ app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlsForUser(req.session.user_ID),
     users: users[req.session.user_ID]
-    // username: req.cookies["username"]
   };
   if(!req.session.user_ID){
     return res.send('<p>Please <a href="/login">login</a> to see the urls. Or <a href="/register">register</a> for an account.<p>');
@@ -118,7 +121,11 @@ app.post("/urls", (req, res) => {
 
 //Registration form
 app.get("/register", (req, res) => {
-  res.render("urls_register")
+  if(users[req.session.user_ID]) {
+    res.redirect("/urls")
+  } else {
+    res.render("urls_register")
+  }
 });
 
 //POST registration form ///double check error handling (if user exists)
@@ -176,21 +183,6 @@ if (!users[req.session.user_ID]) {
  } else {
 res.render("urls_show", templateVars);
 }
-
-//   let shortURL = req.params.id
-//   let templateVars = {
-//     shortURL: req.params.id,
-//     longURL: urlDatabase[shortURL]["orgURL"],
-//     users: users[req.session.user_ID]
-//   };
-//  if (!users[req.session.user_ID]) {
-//   res.send('<p>You must <a href="/login">log in</a> to see this page</p>');
-//  } else if (urlDatabase[shortURL]["userID"] !== req.session.user_ID) {
-//   res.send("you can only see your own urls");
-//  } else if(!urlDatabase[shortURL]) {
-//  res.send('This url does not exist');
-// } else {
-//   res.render("urls_show", templateVars);
 });
 
 
@@ -225,7 +217,12 @@ app.post("/urls/:id/delete", (req, res) => {
 
 //LOGIN display page
 app.get("/login", (req, res) => {
-  res.render("urls_login");
+  if(users[req.session.user_ID]) {
+    res.redirect("/urls")
+  } else {
+    res.render("urls_login");
+  }
+
 });
 
 //LOGIN route
