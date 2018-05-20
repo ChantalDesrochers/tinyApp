@@ -7,6 +7,12 @@ TinyApp is a full stack web application built with Node and Express that allows 
 The finalized project includes the capability to shorten any url. There are also update capabilities, in which you can update the original url, using the same shortened url. Only the user who created the urls can see the display of the long and shortened url, however, anyone, regardless of if they're logged in, can use the shortened url.
 Both passwords and cookies are stored securely.
 
+https://github.com/ChantalDesrochers/tinyApp/blob/master/docs/Shortened_urls_list.png?raw=true
+
+https://github.com/ChantalDesrochers/tinyApp/blob/master/docs/Edit_long_url_page.png?raw=true
+
+https://github.com/ChantalDesrochers/tinyApp/blob/master/docs/login_page.png?raw=true
+
 ## Dependencies
 - Node.js
 - Express
