@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>TinyApp</title>
+  <title>TinyApp - an amazing url shortener</title>
 </head>
 <body>
-     <h1>Tiny app!</h1>
-<header>
+     <h1>Welcome to TinyApp!</h1>
 <% if(users) { %>
 <p>You're logged in as <%=users["email"]%></p>
-<form action="/logout" method="POST">
- <button type="submit">Log out</button>
-</form>
+  <form action="/logout" method="POST">
+  <button type="submit">Log out</button>
+  </form>
 <% } else { %>
   <a href="/register">Register</a>
   <a href="/login">Login</a>
